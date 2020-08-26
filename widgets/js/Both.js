@@ -24,7 +24,7 @@ $(function () {
 			$('#SVI_ICON').attr('class', 'fas fa-microphone-slash');
 		} else if (msg.destinationName == 'hermes/asr/startListening') {
 			$('#SVI_ICON').attr('class', 'fas fa-microphone');
-		} else {
+		} else if (msg.destinationName == 'hermes/tts/say'){
 			$('#SV_ASRcontentBoth')[0].innerHTML = json['text'];
 		}
 	}
