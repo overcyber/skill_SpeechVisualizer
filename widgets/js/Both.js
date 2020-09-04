@@ -1,14 +1,23 @@
 $(function () {
+	let topics = [
+		'hermes/asr/partialTextCaptured',
+		'hermes/asr/textCaptured',
+		'hermes/tts/say',
+		'hermes/nlu/intentParsed',
+		'hermes/asr/stopListening',
+		'hermes/asr/startListening'
+	]
+
 	function onConnect() {
-		MQTT.subscribe('hermes/asr/partialTextCaptured');
-		MQTT.subscribe('hermes/asr/textCaptured');
-		MQTT.subscribe('hermes/tts/say');
-		MQTT.subscribe('hermes/nlu/intentParsed');
-		MQTT.subscribe('hermes/asr/stopListening');
-		MQTT.subscribe('hermes/asr/startListening');
+		for (const topic of topics) {
+			MQTT.subscribe(topic);
+		}
 	}
 
 	function onMessage(msg) {
+		if (!topics.includes(msg.topic) || !msg.payloadString) {
+			return;
+		}
 		//msg to json, get 'text'
 		let json = JSON.parse(msg.payloadString);
 		if (msg.destinationName == 'hermes/asr/partialTextCaptured') {
