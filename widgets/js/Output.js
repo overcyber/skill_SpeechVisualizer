@@ -4,9 +4,9 @@ $(function () {
 	]
 
 	function onConnect() {
-		for (const topic of topics) {
+		topics.forEach(function(topic) {
 			MQTT.subscribe(topic);
-		}
+		});
 	}
 
 	function onMessage(msg) {
@@ -15,7 +15,7 @@ $(function () {
 		}
 		//msg to json, get 'text'
 		let json = JSON.parse(msg.payloadString);
-		if (msg.destinationName == 'hermes/tts/say') {
+		if (msg.topic == 'hermes/tts/say') {
 			$('#SV_ASRcontentOutput')[0].innerHTML = json['text'];
 		}
 	}
