@@ -1,12 +1,12 @@
 {
     "name": "SpeechVisualizer",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "author": "philipp2310",
     "maintainers": [
         "Psychokiller1888"
     ],
     "desc": "Shows the voice in and output as a widget",
-    "aliceMinVersion": "1.0.0-b3",
+    "aliceMinVersion": "1.0.0-b5",
     "icon": "fas fa-comments",
     "category": "assistance",
     "systemRequirements": [
