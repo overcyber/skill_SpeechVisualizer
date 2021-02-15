@@ -1,9 +1,7 @@
-class SpeechVisualizer_Input {
+class SpeechVisualizer_Input extends Widget {
 
 	constructor(uid, widgetId) {
-		this.uid = uid;
-		this.widgetId = widgetId;
-		this.myDiv = document.querySelector(`[data-ref="SpeechVisualizer_Input_${this.uid}"]`);
+		super(uid, widgetId);
 		this.topics = [
 			'hermes/asr/partialTextCaptured',
 			'hermes/asr/textCaptured',
@@ -11,22 +9,11 @@ class SpeechVisualizer_Input {
 			'hermes/asr/stopListening',
 			'hermes/asr/startListening'
 		];
-		const self = this;
-		setTimeout(() => {
-			self.doMqtt();
-		}, 1);
-
-	}
-
-	onConnect() {
-		for (const topic of this.topics) {
-			this.mqtt.subscribe(topic);
-		}
-		console.log('SpeechVisualizer input connected to MQTT.');
+		this.subscribe(this.topics, this.onMessage);
 	}
 
 	onMessage(msg) {
-		if (!this.topics.includes(msg.destinationName) || !msg.payloadString) {
+		if (!msg.payloadString) {
 			return;
 		}
 
@@ -46,31 +33,5 @@ class SpeechVisualizer_Input {
 		} else if (msg.destinationName == 'hermes/asr/startListening') {
 			this.myDiv.querySelector('#SVI_ICON').attr('class', 'fas fa-microphone');
 		}
-	}
-
-	doMqtt() {
-		this.aliceSettings = JSON.parse(window.sessionStorage.aliceSettings);
-		if (!this.aliceSettings['mqttHost']) {
-			setTimeout(this.doMqtt, 1);
-			return;
-		}
-		this.mqtt = new Paho.MQTT.Client(this.aliceSettings['mqttHost'], Number(this.aliceSettings['mqttPort']), `widget_${this.uid}`);
-		this.mqtt.onMessageArrived = (msg) => {
-			this.onMessage(msg);
-		};
-		this.mqtt.onConnectionFailed = this.onConnectionFailed;
-		this.mqtt.connect({
-			onSuccess: () => {
-				this.onConnect();
-			},
-			onFailure: () => {
-				console.log('Speech Vis couldn\'t mqtt!');
-			},
-			timeout  : 5
-		});
-	}
-
-	onConnectionFailed() {
-		console.warn('Widget failed connecting to Mqtt');
 	}
 }
