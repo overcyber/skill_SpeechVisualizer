@@ -20,7 +20,8 @@
             "en",
             "fr",
             "de",
-            "it"
+            "it",
+	    "pt"
         ],
         "asrArbitraryCapture": true,
         "activeManager": []
